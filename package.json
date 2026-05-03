@@ -1,0 +1,27 @@
+{
+  "name": "quick-socket",
+  "version": "1.0.0",
+  "description": "Integrate Socket.io instantly in any Node.js app — rooms, messages, typing, read receipts in minutes",
+  "main": "src/index.js",
+  "keywords": [
+    "socket.io",
+    "websocket",
+    "realtime",
+    "chat",
+    "nodejs",
+    "notifications",
+    "typing",
+    "read-receipts",
+    "rooms"
+  ],
+  "scripts": {
+    "test": "node test/test.js"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "socket.io": "^4.7.2"
+  },
+  "devDependencies": {
+    "socket.io-client": "^4.8.3"
+  }
+}
