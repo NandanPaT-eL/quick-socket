@@ -1,5 +1,10 @@
 # quick-socket
 
+![NPM Version](https://img.shields.io/npm/v/quick-socket)
+![NPM Downloads](https://img.shields.io/npm/dm/quick-socket)
+![License](https://img.shields.io/github/license/Aaromalpm/quick-socket)
+![GitHub Stars](https://img.shields.io/github/stars/Aaromalpm/quick-socket)
+
 Add real-time chat to your Node.js app in minutes — not hours.
 
 Built on top of Socket.io with rooms, messaging, typing indicators, and read receipts ready out of the box.
@@ -215,6 +220,20 @@ const participants = quickSocket.getRoomParticipants('room-001')
 console.log(participants)
 // [{ userId, role, socketId, joinedAt }, ...]
 ```
+
+---
+
+## Contributing
+
+Contributions are welcome! Here's how you can help:
+
+- Fix a bug
+- Add TypeScript support
+- Add Redis support for multi-server scaling
+- Add a React.js example
+- Improve documentation
+
+Please read [CONTRIBUTING.md](CONTRIBUTING.md) to get started.
 
 ---
 
