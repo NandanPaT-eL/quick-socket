@@ -26,4 +26,8 @@ npm install
 npm run dev
 ```
 
-Open http://localhost:5173 in **two browser tabs** to test real-time messaging between users.
+Open http://localhost:5173 in two browser tabs to test real-time messaging.
+
+## Note
+The socket is initialized at module level for simplicity.
+In a production app, manage the socket inside a React context or custom hook.

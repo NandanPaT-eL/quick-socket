@@ -18,6 +18,7 @@ io.on('connection', (socket) => {
   })
 
   socket.on('message', ({ roomId, content }) => {
+    if (roomId !== 'room-001') return
     quickSocket.sendMessage(roomId, {
       senderId: socket.id,
       content,
@@ -26,7 +27,13 @@ io.on('connection', (socket) => {
   })
 
   socket.on('typing', ({ roomId, isTyping }) => {
+    if (roomId !== 'room-001') return
     quickSocket.sendTyping(roomId, socket.id, isTyping)
+  })
+
+  socket.on('disconnect', () => {
+    quickSocket.leaveRoom(socket, 'room-001')
+    console.log('Client disconnected:', socket.id)
   })
 })
 

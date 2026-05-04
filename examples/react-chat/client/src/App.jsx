@@ -63,8 +63,8 @@ export default function App() {
         {messages.length === 0 && (
           <p style={{ color: '#aaa' }}>No messages yet. Say something!</p>
         )}
-        {messages.map((m) => (
-          <div key={m.id} style={{ marginBottom: '8px' }}>
+        {messages.map((m, i) => (
+          <div key={m.id || i} style={{ marginBottom: '8px' }}>
             <span style={{ fontSize: '12px', color: '#888' }}>
               {m.senderId.slice(0, 6)}
             </span>
