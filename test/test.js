@@ -2,6 +2,7 @@ const http = require('http')
 const { io: Client } = require('socket.io-client')
 const quickSocket = require('../src/index')
 const { authMiddleware } = require('../src/middleware')
+
 const server = http.createServer()
 const PORT = 4501
 
@@ -166,7 +167,6 @@ async function runTests() {
       throw new Error('invalid')
     }
     const middleware = authMiddleware(mockAuthFn)
-    let errorPassed = null
     const socket = {
       handshake: { auth: { token: 'valid-token' } }
     }
@@ -177,14 +177,11 @@ async function runTests() {
       resolve()
     }
     middleware(socket, next)
-    setTimeout(() => resolve(), 50)
   })
 
   // ── Test 17: authMiddleware missing token ──
   await new Promise((resolve) => {
     const middleware = authMiddleware(() => {})
-    
-    let errorPassed = null
     const socket = {
       handshake: { auth: {} }
     }
@@ -197,7 +194,6 @@ async function runTests() {
       resolve()
     }
     middleware(socket, next)
-    setTimeout(() => resolve(), 50)
   }) 
   
   // ── Test 18: authMiddleware invalid token ──
@@ -205,8 +201,6 @@ async function runTests() {
     const middleware = authMiddleware(() => {
       throw new Error('invalid')
     })
-    
-    let errorPassed = null
     const socket = {
       handshake: { auth: { token: 'invalid-token' } }
     }
@@ -219,9 +213,24 @@ async function runTests() {
       resolve()
     }
     middleware(socket, next)
-    setTimeout(() => resolve(), 50)
   })
   
+  // ── Test 19: authMiddleware missing auth object ──
+  await new Promise((resolve) => {
+    const middleware = authMiddleware(() => {})
+    const socket = {
+      handshake: {}
+    }
+    const next = (err) => {
+      log(
+        'authMiddleware missing auth object returns error',
+        err instanceof Error && err.message === 'No token provided'
+      )
+      resolve()
+    }
+    middleware(socket, next)
+  })
+
   console.log(`\n=== Results: ${passed} passed, ${failed} failed ===\n`)
 
   client1.disconnect()
