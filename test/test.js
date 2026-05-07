@@ -171,7 +171,6 @@ async function runTests() {
       handshake: { auth: { token: 'valid-token' } }
     }
     const next = (err) => {
-      errorPassed = err
       log('authMiddleware valid token passes', err === undefined)
       log('authMiddleware sets socket.user', socket.user?.id === 1)
       resolve()
@@ -186,7 +185,6 @@ async function runTests() {
       handshake: { auth: {} }
     }
     const next = (err) => {
-      errorPassed = err
       log(
         'authMiddleware missing token returns error',
         err instanceof Error && err.message === 'No token provided'
@@ -205,7 +203,6 @@ async function runTests() {
       handshake: { auth: { token: 'invalid-token' } }
     }
     const next = (err) => {
-      errorPassed = err
       log(
         'authMiddleware invalid token returns error',
         err instanceof Error && err.message === 'Authentication failed'
