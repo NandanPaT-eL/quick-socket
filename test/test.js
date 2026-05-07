@@ -1,7 +1,6 @@
 const http = require('http')
 const { io: Client } = require('socket.io-client')
 const quickSocket = require('../src/index')
-const { authMiddleware } = require('../src/middleware')
 
 const server = http.createServer()
 const PORT = 4501
