@@ -159,6 +159,74 @@ async function runTests() {
   log('STATUS.DELIVERED is "delivered"', quickSocket.STATUS.DELIVERED === 'delivered')
   log('STATUS.READ is "read"', quickSocket.STATUS.READ === 'read')
 
+  // ── Test 16: authMiddleware valid token ──
+  await new Promise((resolve) => {
+    const mockAuthFn = (token) => {
+      if (token === 'valid-token') return { id: 1 }
+      throw new Error('invalid')
+    }
+    const middleware = authMiddleware(mockAuthFn)
+    const socket = {
+      handshake: { auth: { token: 'valid-token' } }
+    }
+    const next = (err) => {
+      log('authMiddleware valid token passes', err === undefined)
+      log('authMiddleware sets socket.user', socket.user?.id === 1)
+      resolve()
+    }
+    middleware(socket, next)
+  })
+
+  // ── Test 17: authMiddleware missing token ──
+  await new Promise((resolve) => {
+    const middleware = authMiddleware(() => {})
+    const socket = {
+      handshake: { auth: {} }
+    }
+    const next = (err) => {
+      log(
+        'authMiddleware missing token returns error',
+        err instanceof Error && err.message === 'No token provided'
+      )
+      resolve()
+    }
+    middleware(socket, next)
+  }) 
+  
+  // ── Test 18: authMiddleware invalid token ──
+  await new Promise((resolve) => {
+    const middleware = authMiddleware(() => {
+      throw new Error('invalid')
+    })
+    const socket = {
+      handshake: { auth: { token: 'invalid-token' } }
+    }
+    const next = (err) => {
+      log(
+        'authMiddleware invalid token returns error',
+        err instanceof Error && err.message === 'Authentication failed'
+      )
+      resolve()
+    }
+    middleware(socket, next)
+  })
+  
+  // ── Test 19: authMiddleware missing auth object ──
+  await new Promise((resolve) => {
+    const middleware = authMiddleware(() => {})
+    const socket = {
+      handshake: {}
+    }
+    const next = (err) => {
+      log(
+        'authMiddleware missing auth object returns error',
+        err instanceof Error && err.message === 'No token provided'
+      )
+      resolve()
+    }
+    middleware(socket, next)
+  })
+
   console.log(`\n=== Results: ${passed} passed, ${failed} failed ===\n`)
 
   client1.disconnect()
