@@ -7,7 +7,8 @@ function createRoom(roomId, meta = {}) {
     '[quick-socket] createRoom() requires a non-empty string roomId. Received: ' + JSON.stringify(roomId)
   )
   if (rooms.has(roomId)) {
-    console.warn(`[quick-socket] createRoom(): room "${roomId}" already exists and will be overwritten.`)
+    console.warn(`[quick-socket] createRoom(): room "${roomId}" already exists. Returning existing room.`)
+    return rooms.get(roomId)
   }
   rooms.set(roomId, {
     id: roomId,

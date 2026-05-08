@@ -19,7 +19,7 @@ function sendMessage(roomId, message) {
     '[quick-socket] sendMessage() requires message.senderId. ' +
     'Each message must identify who sent it.'
   )
-  if (message.content === undefined || message.content === null) throw new Error(
+  if (!message.content) throw new Error(
     '[quick-socket] sendMessage() requires message.content. ' +
     'The message body cannot be empty.'
   )

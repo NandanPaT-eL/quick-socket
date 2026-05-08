@@ -24,7 +24,7 @@ function getIO() {
   if (!io) throw new Error(
     '[quick-socket] Socket.IO server is not initialized. ' +
     'You must call quickSocket.init(httpServer) before using any quick-socket functions. ' +
-    'See: https://github.com/sotiamaestro/quick-socket#getting-started'
+    'See: https://github.com/Aaromalpm/quick-socket#getting-started'
   )
   return io
 }

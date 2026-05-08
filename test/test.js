@@ -149,6 +149,32 @@ async function runTests() {
   })
   log('closeRoom emits room:closed', closeResult?.roomId === 'room-1')
 
+  // ── Validation Tests ──
+  let validationPassed = true
+
+  try {
+    quickSocket.sendMessage(undefined, {})
+    validationPassed = false
+  } catch (err) {
+    if (!err.message.includes('requires a roomId')) validationPassed = false
+  }
+
+  try {
+    quickSocket.sendMessage('room-1', { senderId: 'u1', content: '' })
+    validationPassed = false
+  } catch (err) {
+    if (!err.message.includes('cannot be empty')) validationPassed = false
+  }
+
+  try {
+    quickSocket.createRoom('')
+    validationPassed = false
+  } catch (err) {
+    if (!err.message.includes('non-empty string roomId')) validationPassed = false
+  }
+
+  log('validation throws correct errors for invalid inputs', validationPassed)
+
   // ── Test 14: MESSAGE_TYPES constants ──
   log('MESSAGE_TYPES.TEXT is "text"', quickSocket.MESSAGE_TYPES.TEXT === 'text')
   log('MESSAGE_TYPES.IMAGE is "image"', quickSocket.MESSAGE_TYPES.IMAGE === 'image')
