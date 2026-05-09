@@ -15,6 +15,8 @@ Built on top of Socket.io with rooms, messaging, typing indicators, and read rec
 npm install quick-socket
 ```
 
+TypeScript definitions are included out of the box.
+
 ## Quick Start
 
 ```javascript
