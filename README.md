@@ -112,6 +112,22 @@ quickSocket.editMessage('room-001', 'message-id', 'Updated text')
 quickSocket.deleteMessage('room-001', 'message-id')
 ```
 
+### Get Room Messages
+
+```javascript
+const result = quickSocket.getRoomMessages('room-001', 1, 20)
+
+console.log(result)
+// {
+//   roomId: 'room-001',
+//   page: 1,
+//   limit: 20,
+//   total: 42,
+//   totalPages: 3,
+//   messages: [...]
+// }
+```
+
 ### Notifications
 
 ```javascript

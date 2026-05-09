@@ -1,6 +1,7 @@
 const http = require('http')
 const { io: Client } = require('socket.io-client')
 const quickSocket = require('../src/index')
+const { authMiddleware } = quickSocket
 
 const server = http.createServer()
 const PORT = 4501
@@ -76,6 +77,10 @@ async function runTests() {
   log('sendMessage has correct type', msgResult?.type === 'text')
   log('sendMessage has generated id', !!msgResult?.id)
 
+  const initialMessages = quickSocket.getRoomMessages('room-1', 1, 20)
+  log('getRoomMessages stores sent messages', initialMessages.total === 1)
+  log('getRoomMessages returns the sent message', initialMessages.messages[0]?.id === msgResult?.id)
+
   // ── Test 5: sendTyping ──
   const typingResult = await new Promise((resolve) => {
     client2.once('message:typing', (data) => resolve(data))
@@ -141,6 +146,24 @@ async function runTests() {
   })
   log('notifyRoom delivers event', notifyRoomResult?.status === 'active')
 
+  quickSocket.sendMessage('room-1', {
+    senderId: 'u1',
+    content: 'Second',
+    type: quickSocket.MESSAGE_TYPES.TEXT
+  })
+  quickSocket.sendMessage('room-1', {
+    senderId: 'u2',
+    content: 'Third',
+    type: quickSocket.MESSAGE_TYPES.TEXT
+  })
+
+  const pageOne = quickSocket.getRoomMessages('room-1', 1, 2)
+  log('getRoomMessages paginates latest messages', pageOne.messages.length === 2)
+  log('getRoomMessages page 1 returns latest slice', pageOne.messages[0]?.content === 'Second' && pageOne.messages[1]?.content === 'Third')
+
+  const pageTwo = quickSocket.getRoomMessages('room-1', 2, 2)
+  log('getRoomMessages page 2 returns older messages', pageTwo.messages.length === 1 && pageTwo.messages[0]?.content === 'Hello!')
+
   // ── Test 13: closeRoom ──
   const closeResult = await new Promise((resolve) => {
     client2.once('room:closed', (data) => resolve(data))
@@ -148,6 +171,9 @@ async function runTests() {
     setTimeout(() => resolve(null), 2000)
   })
   log('closeRoom emits room:closed', closeResult?.roomId === 'room-1')
+
+  const messagesAfterClose = quickSocket.getRoomMessages('room-1', 1, 20)
+  log('closeRoom clears stored room messages', messagesAfterClose.total === 0)
 
   // ── Test 14: MESSAGE_TYPES constants ──
   log('MESSAGE_TYPES.TEXT is "text"', quickSocket.MESSAGE_TYPES.TEXT === 'text')
