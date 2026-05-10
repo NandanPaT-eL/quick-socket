@@ -10,6 +10,21 @@ const MESSAGE_TYPES = {
 const roomMessages = new Map()
 
 function sendMessage(roomId, message) {
+  if (!roomId) throw new Error(
+    '[quick-socket] sendMessage() requires a roomId as the first argument. Received: ' + roomId
+  )
+  if (!message || typeof message !== 'object') throw new Error(
+    '[quick-socket] sendMessage() requires a message object as the second argument. ' +
+    'Expected: { senderId: string, content: string, type?: string }'
+  )
+  if (!message.senderId) throw new Error(
+    '[quick-socket] sendMessage() requires message.senderId. ' +
+    'Each message must identify who sent it.'
+  )
+  if (!message.content) throw new Error(
+    '[quick-socket] sendMessage() requires message.content. ' +
+    'The message body cannot be empty.'
+  )
   const payload = {
     id: `msg_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
     roomId,

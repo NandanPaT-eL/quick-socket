@@ -21,7 +21,11 @@ function init(httpServer, options = {}) {
 }
 
 function getIO() {
-  if (!io) throw new Error('[quick-socket] Not initialized. Call init() first.')
+  if (!io) throw new Error(
+    '[quick-socket] Socket.IO server is not initialized. ' +
+    'You must call quickSocket.init(httpServer) before using any quick-socket functions. ' +
+    'See: https://github.com/Aaromalpm/quick-socket#getting-started'
+  )
   return io
 }
 

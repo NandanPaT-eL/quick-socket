@@ -262,6 +262,7 @@ async function runTests() {
 }
 
 runTests().catch((err) => {
-  console.error('Test error:', err)
+  console.error('[quick-socket tests] Test runner crashed unexpectedly:', err.message)
+  console.error(err.stack)
   process.exit(1)
 })
